@@ -1,4 +1,4 @@
-package com.alist;
+package com.lists;
 
 import static org.junit.Assert.assertEquals;
 

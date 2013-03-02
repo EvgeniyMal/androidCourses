@@ -108,7 +108,7 @@ public class Linked2List implements IList {
     }
 
     @Override
-    public IList sort() {
+    public void sort() {
 	int size = size();
 	for (int i = 0; i < size - 1; i++) {
 	    for (int j = i + 1; j < size; j++) {
@@ -119,7 +119,6 @@ public class Linked2List implements IList {
 		}
 	    }
 	}
-	return this;
     }
 
     @Override
@@ -186,6 +185,12 @@ public class Linked2List implements IList {
 	for (int i=0; i<m.length; i++) {
 	    this.addEnd(m[i]);
 	}
+    }
+
+    @Override
+    public int[] toArray() {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }
