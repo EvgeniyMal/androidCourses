@@ -21,7 +21,7 @@ public class Test {
     private IList list;
     private int[] one = { 7 };
     private int[] two = { 4, 5 };
-    private int[] many = { 1, 2, 3, 4, 5 };
+    private int[] many = { 5, 4, 3, 2, 1 };
 
     @Parameters
     public static List<Object[]> isEmptyData() {
@@ -99,12 +99,12 @@ public class Test {
     @org.junit.Test
     public void testAddStartZero() {
 	list.addStart(7);
-	assertEquals("", 7, list.get(0));
+	assertEquals(7, list.get(0));
     }
 
     @org.junit.Test
     public void testAddPosZero() {
-	list.add(2, 7);
+	list.add(0, 7);
 	assertEquals(1, list.size());
 	assertEquals(7, list.get(0));
     }
@@ -136,15 +136,11 @@ public class Test {
     @org.junit.Test (expected = IndexOutOfBoundsException.class)
     public void testDelEnd() {
 	list.delEnd();
-	assertEquals("", 0, list.size());
-	//assertEquals("", 3, list.get(2));
     }
 
     @org.junit.Test (expected = IndexOutOfBoundsException.class)
     public void testDelStart() {
 	list.delStart();
-	assertEquals("", 3, list.size());
-	assertEquals("", 4, list.get(0));
     }
 
     @org.junit.Test (expected = IndexOutOfBoundsException.class)
@@ -158,7 +154,12 @@ public class Test {
 
     @org.junit.Test
     public void testSort() {
+	list.init(many);
 	list.sort();
+	int [] sorted = list.toArray();
+	for (int i=0; i<many.length; i++) {
+	    assertEquals(many[many.length - i - 1], sorted[i]);
+	}
     }
 
     @org.junit.Test

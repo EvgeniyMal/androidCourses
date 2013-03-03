@@ -113,18 +113,38 @@ public class LinkedList implements IList {
 	    el.next = el.next.next;
 	}
     }
+    
+    private class Stack {
+	int level;
+	Element item;
+    }
 
     @Override
     public void sort() {
-	int size = size();
-	for (int i = 0; i < size - 1; i++) {
-	    for (int j = i + 1; j < size; j++) {
-		if (get(i) > get(j)) {
-		    int a = get(i);
-		    set(i, get(j));
-		    set(j, a);
-		}
+	int stackPos = 0;
+	Element p = start;
+	Stack[] stack = new Stack[32];
+	while (p != null) {
+	    Stack stackItem = new Stack();
+	    stackItem.level = 1;
+	    stackItem.item = p;
+	    stack[stackPos] = stackItem;
+	    p = p.next;
+	    stack[stackPos].item.next = null;
+	    stackPos++;
+	    while (stackPos > 1 && stack[stackPos - 1].level == stack[stackPos - 2].level) { 
+		stack[stackPos - 2].item = intersectSorted(stack[stackPos - 2].item, stack[stackPos - 1].item);
+		stack[stackPos - 2].level++;
+		stackPos--;
 	    }
+	}
+	while (stackPos > 1) {
+	    stack[stackPos - 2].item = intersectSorted(stack[stackPos - 2].item, stack[stackPos - 1].item);
+	    stack[stackPos - 2].level++;
+	    stackPos--;
+	}
+	if (stackPos > 0) {
+	    start = stack[0].item;
 	}
     }
 
@@ -183,8 +203,43 @@ public class LinkedList implements IList {
 
     @Override
     public int[] toArray() {
-	// TODO Auto-generated method stub
-	return null;
+	int [] res = new int[size()];
+	Element el = start;
+	int count = 0;
+	while (el != null) {
+	    res[count++] = el.value;
+	    el = el.next;
+	}
+	return res;
+    }
+    
+    private Element intersectSorted(Element el1, Element el2) {
+	Element pCurItem;
+	if (el1.value <= el2.value) { 
+	    pCurItem = el1;
+	    el1 = el1.next;
+	} else {
+	    pCurItem = el2;
+	    el2 = el2.next;
+	}
+        Element result = pCurItem;
+        while (el1 != null && el2 != null) {
+            if (el1.value <= el2.value) {
+        	pCurItem.next = el1;
+        	pCurItem = el1;
+        	el1 = el1.next;
+            } else {
+        	pCurItem.next = el2;
+        	pCurItem = el2;
+        	el2 = el2.next;
+            }
+            if (el1 != null) {
+        	pCurItem.next = el1;
+            } else {
+        	pCurItem.next = el2;
+            }
+        }
+        return result;
     }
 
 }
