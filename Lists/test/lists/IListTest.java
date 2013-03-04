@@ -12,7 +12,8 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class IListTest
 {    
-    static IList arr;
+    private String className;
+    private IList arr=null;
     
     @Parameterized.Parameters
     public static Collection data()
@@ -20,35 +21,28 @@ public class IListTest
        return Arrays.asList
                (new Object[][]
                     {
-                        {new AListSingle()},
-                        {new AListDouble()},
-                        {new LList1p1l()},
-                        {new LList2p1l()},
-                        {new LList2p2l()}
+                        {"lists.AListSingle"},
+                        {"lists.AListDouble"},
+                        {"lists.LList1p1l"},
+                        {"lists.LList2p2l"},
+                        {"lists.EvgeniyMal_A2List"},
+                        {"lists.EvgeniyMal_AList"},
+                        {"lists.EvgeniyMal_Linked2List"},
+                        {"lists.EvgeniyMal_LinkedList"}
                     }
                 );
     }
     
     
-    public IListTest(IList arr)
+    public IListTest(String className)
     {
-        this.arr=arr;
+        this.className=className;
     }
-     
-    
-//    @BeforeClass
-//    public static void SetUp()
-//    {
-//        //arr=new MyArrayList();
-//        //arr=new MyDList();
-//        //arr=new MyLList();
-//        arr=new MyLEList();
-//    }
-    //--------------------------------------------------------------------------
     @Before
-    public void clearArr()
+    public void SetUp() throws InstantiationException, IllegalAccessException, ClassNotFoundException
     {
-        arr.clear();
+        arr=(IList) Class.forName(className).newInstance();
+        int a=0;
     }
   @Test
   public void testAddStart_0()
@@ -190,21 +184,21 @@ public class IListTest
     int[]res={13,14,56,2,44,78,79};
     assertArrayEquals(res, arr.toArray());
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testAddPosition_ArrayIndexOutOfBoundsException_NEGATIVE()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testAddPosition_IndexOutOfBoundsException_NEGATIVE()
   {
     arr.addPos(-1,12);
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testAddPosition_ArrayIndexOutOfBoundsException_TOOMUCH()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testAddPosition_IndexOutOfBoundsException_TOOMUCH()
   {
     int[]tmp={13,14,56,44,78,79};
     arr.init(tmp);
     arr.addPos(7,12);
   }
     //--------------------------------------------------------------------------  
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testDelStart_ArrayIndexOutOfBoundsException()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testDelStart_IndexOutOfBoundsException()
   {
     arr.delStart();
   }
@@ -244,8 +238,8 @@ public class IListTest
     assertArrayEquals(res, arr.toArray());
   }
     //--------------------------------------------------------------------------
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testDelEnd_ArrayIndexOutOfBoundsException()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testDelEnd_IndexOutOfBoundsException()
   {
     arr.delEnd();
   }
@@ -285,18 +279,18 @@ public class IListTest
     assertArrayEquals(res, arr.toArray());
   }
     //--------------------------------------------------------------------------
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testDelPosition_ArrayIndexOutOfBoundsException_EMPTY()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testDelPosition_IndexOutOfBoundsException_EMPTY()
   {
     arr.delPos(0);
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testDelPosition_ArrayIndexOutOfBoundsException_NEGATIVE()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testDelPosition_IndexOutOfBoundsException_NEGATIVE()
   {
     arr.delPos(-1);
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testDelPosition_ArrayIndexOutOfBoundsException_TOOMUCH()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testDelPosition_IndexOutOfBoundsException_TOOMUCH()
   {
     int[]tmp={13,14,56,44,78,79};
     arr.init(tmp);
@@ -351,13 +345,13 @@ public class IListTest
     int[]tmpArr={3};
     assertArrayEquals(tmpArr, arr.toArray());
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testSet_ArrayIndexOutOfBoundsException_NEGATIVE()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testSet_IndexOutOfBoundsException_NEGATIVE()
   {
     arr.set(-1,12);
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testSet_ArrayIndexOutOfBoundsException_TOOMUCH()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testSet_IndexOutOfBoundsException_TOOMUCH()
   {
     int[]tmp={13,14,56,44,78,79};
     arr.init(tmp);
@@ -375,13 +369,13 @@ public class IListTest
     int[]tmpArr={2};
     assertArrayEquals(tmpArr, arr.toArray());
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testGet_ArrayIndexOutOfBoundsException_NEGATIVE()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testGet_IndexOutOfBoundsException_NEGATIVE()
   {
     arr.get(-1);
   }
-  @Test(expected=ArrayIndexOutOfBoundsException.class)
-  public void testGet_ArrayIndexOutOfBoundsException_TOOMUCH()
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void testGet_IndexOutOfBoundsException_TOOMUCH()
   {
     int[]tmp={13,14,56,44,78,79};
     arr.init(tmp);
@@ -469,47 +463,6 @@ public class IListTest
     int[]tmp={};
     arr.init(tmp);
     arr.sort();
-    assertEquals("", arr.toString());
-    int[]res={};
-    assertArrayEquals(res, arr.toArray());
-  }
-    //--------------------------------------------------------------------------
-  @Test
-  public void testRevers_MANY()
-  {
-    int[]tmp={13,14,2,44,79,17};
-    arr.init(tmp);
-    arr.revers();
-    assertEquals("17 79 44 2 14 13", arr.toString());
-    int[]res={17,79,44,2,14,13};
-    assertArrayEquals(res, arr.toArray());
-  }
-  @Test
-  public void testRevers_2()
-  {
-    int[]tmp={13,14};
-    arr.init(tmp);
-    arr.revers();
-    assertEquals("14 13", arr.toString());
-    int[]res={14,13};
-    assertArrayEquals(res, arr.toArray());
-  }
-  @Test
-  public void testRevers_1()
-  {
-    int[]tmp={13};
-    arr.init(tmp);
-    arr.revers();
-    assertEquals("13", arr.toString());
-    int[]res={13};
-    assertArrayEquals(res, arr.toArray());
-  }
-  @Test
-  public void testRevers_0()
-  {
-    int[]tmp={};
-    arr.init(tmp);
-    arr.revers();
     assertEquals("", arr.toString());
     int[]res={};
     assertArrayEquals(res, arr.toArray());

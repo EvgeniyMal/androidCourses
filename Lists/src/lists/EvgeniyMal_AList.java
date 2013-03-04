@@ -1,17 +1,15 @@
-package com.lists;
+package lists;
 
 import java.util.Iterator;
 
-import com.lists.interfaces.IList;
-
-public class AList implements IList, Iterable<Integer>, Iterator<Integer> {
+public class EvgeniyMal_AList implements IList {
     
     private int[] data;
     private int INIT_SIZE = 10; 
     private int position;
     private int pos = 0;
     
-    public AList() {
+    public EvgeniyMal_AList() {
 	data = new int[INIT_SIZE];
 	position = 0;
     }
@@ -23,16 +21,16 @@ public class AList implements IList, Iterable<Integer>, Iterator<Integer> {
 
     @Override
     public void addEnd(int el) {
-	this.add(position, el);	
+	this.addPos(position, el);	
     }
 
     @Override
     public void addStart(int el) {
-	this.add(0, el);
+	this.addPos(0, el);
     }
 
     @Override
-    public void add(int pos, int el) {
+    public void addPos(int pos, int el) {
 	if (pos < 0 || pos > position) {
 	    throw new IndexOutOfBoundsException();
 	}
@@ -52,16 +50,16 @@ public class AList implements IList, Iterable<Integer>, Iterator<Integer> {
 
     @Override
     public void delEnd() {
-	this.del(position);	
+	this.delPos(position);	
     }
 
     @Override
     public void delStart() {
-	this.del(0);
+	this.delPos(0);
     }
 
     @Override
-    public void del(int pos) {
+    public void delPos(int pos) {
 	if (position == 0) {
 	    throw new IndexOutOfBoundsException();
 	}
@@ -107,11 +105,11 @@ public class AList implements IList, Iterable<Integer>, Iterator<Integer> {
 
     @Override
     public IList copy() {
-	AList res = new AList();
-	for (int i=0; i<position; i++) {
-	    res.addEnd(data[i]);
-	}
-	return res;
+    	EvgeniyMal_AList res = new EvgeniyMal_AList();
+    	for (int i=0; i<position; i++) {
+    		res.addEnd(data[i]);
+    	}
+    	return res;
     }
     
     public void init(int[] m) {
@@ -147,5 +145,4 @@ public class AList implements IList, Iterable<Integer>, Iterator<Integer> {
     public int[] toArray() {
 	return data;
     }
-
 }

@@ -1,8 +1,8 @@
-package com.lists;
+package lists;
 
-import com.lists.interfaces.IList;
+import java.util.Iterator;
 
-public class LinkedList implements IList {
+public class EvgeniyMal_LinkedList implements IList {
 
     private class Element {
 
@@ -17,7 +17,7 @@ public class LinkedList implements IList {
 
     private Element start;
 
-    public LinkedList() {
+    public EvgeniyMal_LinkedList() {
 	this.start = null;
     }
 
@@ -55,7 +55,7 @@ public class LinkedList implements IList {
     }
 
     @Override
-    public void add(int pos, int el) {
+    public void addPos(int pos, int el) {
 	if (pos < 0 || pos > size()) {
 	    throw new IndexOutOfBoundsException();
 	}
@@ -99,7 +99,7 @@ public class LinkedList implements IList {
     }
 
     @Override
-    public void del(int pos) {
+    public void delPos(int pos) {
 	if (pos < 0 || pos >= size()) {
 	    throw new IndexOutOfBoundsException();
 	}
@@ -160,9 +160,9 @@ public class LinkedList implements IList {
     @Override
     public IList copy() {
 	if (start == null) {
-	    return new LinkedList();
+	    return new EvgeniyMal_LinkedList();
 	}
-	LinkedList res = new LinkedList();
+	EvgeniyMal_LinkedList res = new EvgeniyMal_LinkedList();
 	res.start = new Element(start.value);
 	Element el = start;
 	Element resEl = res.start;
@@ -186,5 +186,33 @@ public class LinkedList implements IList {
 	// TODO Auto-generated method stub
 	return null;
     }
+
+	@Override
+	public Iterator<Integer> iterator()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Object next()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void remove()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -3,7 +3,7 @@ public class Lists
 {
     public static void main(String[] args)
     {
-        IList arr=new LList1p1l();
+        IList arr=new LList2p2l();
         int[]tempArray={4,56,66};
         arr.init(tempArray);
         

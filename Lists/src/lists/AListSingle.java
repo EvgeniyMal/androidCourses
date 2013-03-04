@@ -49,7 +49,7 @@ public class AListSingle implements IList
     @Override
     public void addPos(int position, int value)
     {
-        if(position<0||position>index)throw new ArrayIndexOutOfBoundsException();
+        if(position<0||position>index)throw new IndexOutOfBoundsException();
         increaseArray();
         if(index==0)
         {
@@ -67,7 +67,7 @@ public class AListSingle implements IList
     @Override
     public void delStart()
     {
-        if(index==0)throw new ArrayIndexOutOfBoundsException();
+        if(index==0)throw new IndexOutOfBoundsException();
         for(int i=1;i<index;++i)
         {
             arr[i-1]=arr[i];
@@ -78,14 +78,14 @@ public class AListSingle implements IList
     @Override
     public void delEnd()
     {
-        if(index==0)throw new ArrayIndexOutOfBoundsException();
+        if(index==0)throw new IndexOutOfBoundsException();
         --index;
     }
 
     @Override
     public void delPos(int position)
     {
-        if(index==0||position<0||position>=index)throw new ArrayIndexOutOfBoundsException();     
+        if(index==0||position<0||position>=index)throw new IndexOutOfBoundsException();     
         for(int i=position+1;i<index;++i)
         {
             arr[i-1]=arr[i];
@@ -96,14 +96,14 @@ public class AListSingle implements IList
     @Override
     public void set(int position, int value)
     {
-        if(position<0||position>=index)throw new ArrayIndexOutOfBoundsException();
+        if(position<0||position>=index)throw new IndexOutOfBoundsException();
         arr[position]=value;
     }
 
     @Override
     public int get(int position)
     {        
-        if(position<0||position>=index)throw new ArrayIndexOutOfBoundsException();
+        if(position<0||position>=index)throw new IndexOutOfBoundsException();
         return arr[position];
     }
 
@@ -134,18 +134,6 @@ public class AListSingle implements IList
                     arr[j]=temp;
                 }
             }
-        }
-    }
-
-    @Override
-    public void revers()
-    {
-        if(index<2) return;
-        for(int i=0;i<index/2;++i)
-        {
-            int temp=arr[index-i-1];
-            arr[index-i-1]=arr[i];
-            arr[i]=temp;
         }
     }
 

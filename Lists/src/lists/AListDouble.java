@@ -75,7 +75,7 @@ public class AListDouble implements IList
     @Override
     public void addPos(int position, int value)
     {
-        if(front+1+position<=front||front+1+position>rear)throw new ArrayIndexOutOfBoundsException();
+        if(front+1+position<=front||front+1+position>rear)throw new IndexOutOfBoundsException();
         balanceArray();
         if(position<size()/2)
         {
@@ -100,21 +100,21 @@ public class AListDouble implements IList
     @Override
     public void delStart()
     {
-        if(size()==0)throw new ArrayIndexOutOfBoundsException();
+        if(size()==0)throw new IndexOutOfBoundsException();
         ++front;
     }
 
     @Override
     public void delEnd()
     {
-        if(size()==0)throw new ArrayIndexOutOfBoundsException();
+        if(size()==0)throw new IndexOutOfBoundsException();
         --rear;
     }
 
     @Override
     public void delPos(int position)
     {
-        if(size()==0||front+1+position<=front||front+1+position>=rear)throw new ArrayIndexOutOfBoundsException(); 
+        if(size()==0||front+1+position<=front||front+1+position>=rear)throw new IndexOutOfBoundsException(); 
         if(position<size()/2)
         {
             for(int i=front+1+position;i>front+1;--i)
@@ -136,14 +136,14 @@ public class AListDouble implements IList
     @Override
     public void set(int position, int value)
     {
-        if(front+1+position<=front||front+1+position>=rear)throw new ArrayIndexOutOfBoundsException();
+        if(front+1+position<=front||front+1+position>=rear)throw new IndexOutOfBoundsException();
         arr[front+1+position]=value;
     }
 
     @Override
     public int get(int position)
     {
-        if(front+1+position<=front||front+1+position>=rear)throw new ArrayIndexOutOfBoundsException();
+        if(front+1+position<=front||front+1+position>=rear)throw new IndexOutOfBoundsException();
         return arr[front+1+position];
     }
 
@@ -176,20 +176,6 @@ public class AListDouble implements IList
                     arr[j]=temp;
                 }
             }
-        }
-    }
-
-    @Override
-    public void revers()
-    {
-        if(size()<2) return;
-        int backCounter=1;
-        for(int i=front+1;i<front+1+size()/2;++i)
-        {
-            int temp=arr[rear-backCounter];
-            arr[rear-backCounter]=arr[i];
-            arr[i]=temp;
-            ++backCounter;
         }
     }
 

@@ -1,16 +1,19 @@
 package lists;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class LList2p2l implements IList
 {
-    DNode front;
-    DNode rear;
+	private DNode front;
+	private DNode rear;
+    private int count=0;
+    private int index=0;
     
     public LList2p2l()    
     {
-        front=new DNode();
-        rear=new DNode();
+        front=null;
+        rear=null;
     }
     @Override
     public void init(int[] initArray)
@@ -24,176 +27,148 @@ public class LList2p2l implements IList
     @Override
     public void addStart(int value)
     {
-        DNode temp=new DNode(value);
-        if(front.getNext()==null)
-        {
-            front.setNext(temp);
-            temp.setPrev(front);
-            rear.setPrev(temp);
-            temp.setNext(rear);
-        }
-        else
-        {
-            temp.setNext(front.getNext());
-            front.getNext().setPrev(temp);
-            temp.setPrev(front);
-            front.setNext(temp);
-            
-        }
+        addPos(0,value);
     }
 
     @Override
     public void addEnd(int value)
-    {        
-        DNode temp=new DNode(value);
-        if(rear.getPrev()==null)
-        {
-            front.setNext(temp);
-            temp.setPrev(front);
-            rear.setPrev(temp);
-            temp.setNext(rear);
-        }
-        else
-        {
-            temp.setPrev(rear.getPrev());
-            rear.getPrev().setNext(temp);
-            temp.setNext(rear);
-            rear.setPrev(temp);            
-        }
+    {     
+        addPos(index,value);
     }
 
     @Override
     public void addPos(int position, int value)
     {
-        if(position<0||position>size())throw new ArrayIndexOutOfBoundsException();
+        if(position<0||position>index)throw new IndexOutOfBoundsException();
         
         DNode temp=new DNode(value);
         
-        if(front.getNext()==null)
+        if(front==null)
         {
-            front.setNext(temp);
-            temp.setPrev(front);
-            rear.setPrev(temp);
-            temp.setNext(rear);
+            front=temp;
+            rear=temp;
+        }
+        else if(position==0)
+        {
+        	temp.setNext(front);
+            front.setPrev(temp);
+            front=temp;  
+        }
+        else if(position==index)
+        {
+        	temp.setPrev(rear);
+        	rear.setNext(temp);
+        	rear=temp;
         }
         else
         {
-            DNode pluck=front.getNext();
+            DNode current=front;
             int counter=0;
-            while(pluck!=rear&&counter++<position)
+            while(counter++<position)
             {
-                pluck=pluck.getNext();
+            	current=current.getNext();
             }
-            temp.setPrev(pluck.getPrev());
-            pluck.setPrev(temp);
+            temp.setPrev(current.getPrev());
+            current.setPrev(temp);
             temp.getPrev().setNext(temp);
-            temp.setNext(pluck);
+            temp.setNext(current);
         }
+        ++index;
     }
 
     @Override
     public void delStart()
     {
-        if(size()==0)throw new ArrayIndexOutOfBoundsException();
-        front.setNext(front.getNext().getNext());
-        front.getNext().setPrev(front);
-        if(front.getNext()==rear)
-        {
-            front=new DNode();
-            rear=new DNode();
-        }
+    	delPos(0);
     }
 
     @Override
     public void delEnd()
     {
-        if(size()==0)throw new ArrayIndexOutOfBoundsException();
-        rear.setPrev(rear.getPrev().getPrev());
-        rear.getPrev().setNext(rear);
-        if(front.getNext()==rear)
-        {
-            front=new DNode();
-            rear=new DNode();
-        }
+    	delPos(index-1);
     }
 
     @Override
     public void delPos(int position)
     {
-        if(position<0||position>=size())throw new ArrayIndexOutOfBoundsException();
-            
-        if(front.getNext()==rear)
+        if(position<0||position>=index)throw new IndexOutOfBoundsException();
+        if(index==1)
         {
-            front=new DNode();
-            rear=new DNode();
-        }  
-        else
-        {
-            DNode pluck=front.getNext();
-            int counter=0;
-            while(pluck!=rear&&counter++<position)
-            {
-                pluck=pluck.getNext();
-            }
-            pluck.getPrev().setNext(pluck.getNext());
-            pluck.getNext().setPrev(pluck.getPrev());
+        	front=null;
+        	rear=null;
         }
+        else if(position==0)
+        {
+        	front=front.getNext();
+	        front.setPrev(null);
+        }
+        else if(position==index-1)
+        {
+        	rear=rear.getPrev();
+	        rear.setNext(null);
+        }
+        else
+        { 
+            DNode current=front.getNext();
+            int counter=0;
+            while(counter++<position-1)
+            {
+            	current=current.getNext();
+            }
+            current.getPrev().setNext(current.getNext());
+            current.getNext().setPrev(current.getPrev());
+        }
+        --index;
     }
 
     @Override
     public void set(int position, int value)
     {
-        if(position<0||position>=size())throw new ArrayIndexOutOfBoundsException();
-        DNode pluck=front;
+        if(position<0||position>=index)throw new IndexOutOfBoundsException();
+        DNode current=front;
         int counter=0;
-        while(pluck.getNext()!=null&&counter++<=position)
+        while(counter++<=position-1)
         {
-            pluck=pluck.getNext();
+        	current=current.getNext();
         }
-        pluck.setData(value);
+        current.setData(value);
     }
 
     @Override
     public int get(int position)
     { 
-        if(position<0||position>=size())throw new ArrayIndexOutOfBoundsException();       
-        DNode pluck=front.getNext();
+        if(position<0||position>=index)throw new IndexOutOfBoundsException();       
+        DNode current=front;
         int counter=0;
-        while(pluck.getNext()!=rear&&counter++<position)
+        while(counter++<position)
         {
-            pluck=pluck.getNext();
+        	current=current.getNext();
         }
-        return pluck.getData();
+        return current.getData();
     }
 
     @Override
     public void clear()
     {        
-        front=new DNode();
-        rear=new DNode();
+        front=null;
+        rear=null;
+        index=0;
     }
 
     @Override
     public int size()
-    {             
-        DNode pluck=front;
-        int counter=0;
-        while(pluck.getNext()!=rear&&pluck.getNext()!=null)
-        {
-            pluck=pluck.getNext();
-            ++counter;
-        }
-        return counter;
+    {  
+        return index;
     }
 
     @Override
     public void sort()
     {
-        if(size()<2) return;
-        DNode lastSorted=rear;
-        while(front.getNext().getNext()!=lastSorted)
+        if(index<2) return;
+        DNode lastSorted=null;
+        while(front.getNext()!=lastSorted)
         {
-            DNode tmp=front.getNext();
+            DNode tmp=front;
             while(tmp.getNext()!=lastSorted)
             {
                 if(tmp.getData()>tmp.getNext().getData())
@@ -209,75 +184,59 @@ public class LList2p2l implements IList
     }
 
     @Override
-    public void revers()
-    {
-        if(size()<2) return;
-        DNode first=front.getNext();
-        while(first.getNext()!=rear)
-        {
-            DNode tmp=first.getNext();
-            first.setNext(tmp.getNext());
-            tmp.getNext().setPrev(first);
-            tmp.setNext(front.getNext());
-            front.getNext().setPrev(tmp);
-            front.setNext(tmp);
-            tmp.setPrev(front);
-            
-        }
-    }
-
-    @Override
     public IList copy()
     {
-        LList2p2l temp=new LList2p2l();
-        DNode tempParent=temp.front;
-        DNode pluck=front;
+    	LList2p2l temp=new LList2p2l();
+        if(this.front==null) return temp;
         
-        while(pluck.getNext()!=rear)
+        temp.front=new DNode(front.getData());
+        
+        DNode tempCurrent=temp.front;        
+        DNode current=front;
+        
+        while(current!=rear)
         {
-            pluck=pluck.getNext();
-            DNode n=new DNode(pluck.getData());
-            tempParent.setNext(n);
-            tempParent.getNext().setPrev(tempParent);
-            tempParent=tempParent.getNext();
-        }        
-        temp.rear.setPrev(tempParent);
-        tempParent.setNext(temp.rear);
+        	current=current.getNext();
+            DNode n=new DNode(current.getData());
+            tempCurrent.setNext(n);
+            tempCurrent=tempCurrent.getNext();
+        }   
+        rear=tempCurrent;
+        temp.index=this.index;
         return temp;
     }
 
     @Override
     public String toString()
     {
-        String result="";
-        if(size()>0)
+    	String result="";
+        DNode current=front;
+        
+        while(current!=null)
         {
-            DNode pluck=front.getNext();
-
-            while(pluck!=rear)
-            {
-                boolean b=(front.getNext()==pluck)?true:false;
-
-                if(b) result=""+pluck.getData();
-                else result=result + " "+pluck.getData();
-                pluck=pluck.getNext();
-            }      
-        }
+            boolean b=(current==front)?true:false;
+            
+            if(b) result=""+current.getData();
+            else result=result + " "+current.getData();
+            
+            current=current.getNext();
+        }      
+        
         return result;
     }
     @Override
     public int[] toArray()
     {
-        int[]arr=new int[size()];
-        if(size()>0)
+        int[]arr=new int[index];
+        if(index>0)
         {
             int i=0;
-            DNode pluck=front.getNext();
+            DNode current=front;
 
-            while(pluck!=rear)
+            while(current!=null)
             {
-                arr[i++]=pluck.getData();
-                pluck=pluck.getNext();
+                arr[i++]=current.getData();
+                current=current.getNext();
             }      
         }
         return arr;
@@ -286,19 +245,24 @@ public class LList2p2l implements IList
     @Override
     public Iterator<Integer> iterator()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this;
     }
 
     @Override
     public boolean hasNext()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	if(count<this.index)return true;
+        return false;
     }
 
     @Override
     public Object next()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(count == this.index)
+        throw new NoSuchElementException();
+
+        count++;
+        return this.get(count-1);
     }
 
     @Override

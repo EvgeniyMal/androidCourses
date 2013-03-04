@@ -1,14 +1,14 @@
-package com.lists;
+package lists;
 
-import com.lists.interfaces.IList;
+import java.util.Iterator;
 
-public class A2List implements IList {
+public class EvgeniyMal_A2List implements IList {
 
     private int[] data;
     private int INIT_SIZE = 10;
     private int startPosition, endPosition;
 
-    public A2List() {
+    public EvgeniyMal_A2List() {
 	data = new int[INIT_SIZE];
 	endPosition = INIT_SIZE / 2;
 	startPosition = endPosition - 1;
@@ -32,7 +32,7 @@ public class A2List implements IList {
     }
 
     @Override
-    public void add(int pos, int el) {
+    public void addPos(int pos, int el) {
 	if (pos < startPosition || pos > endPosition) {
 	    throw new IndexOutOfBoundsException();
 	}
@@ -84,7 +84,7 @@ public class A2List implements IList {
     }
 
     @Override
-    public void del(int pos) {
+    public void delPos(int pos) {
 	if (pos <= startPosition || pos >= endPosition) {
 	    throw new IndexOutOfBoundsException();
 	}
@@ -138,7 +138,7 @@ public class A2List implements IList {
 
     @Override
     public IList copy() {
-	A2List res = new A2List();
+	EvgeniyMal_A2List res = new EvgeniyMal_A2List();
 	res.INIT_SIZE = INIT_SIZE;
 	res.data = new int[INIT_SIZE];
 	res.startPosition = startPosition;
@@ -162,5 +162,33 @@ public class A2List implements IList {
 	System.arraycopy(data, startPosition+1, temp, 0, size());
 	return temp;
     }
+
+	@Override
+	public Iterator<Integer> iterator()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasNext()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Object next()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void remove()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 }

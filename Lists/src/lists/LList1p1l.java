@@ -5,141 +5,184 @@ import java.util.NoSuchElementException;
 
 public class LList1p1l implements IList
 {
-    protected Node root;
-    protected int count;
+    private Node root;
+    private int count=0;
+    private int index=0;
     
     public LList1p1l()
     {
-        root=new Node();
+        root=null;
     }
     
     @Override
     public void init(int[] initArray)
     {
-        Node parent=root;
         for(int i=0;i<initArray.length;++i)
         {
-            Node temp=new Node(initArray[i]);
-            parent.setNext(temp);
-            parent=temp;
+            addEnd(initArray[i]);
         }
     }
 
     @Override
     public void addStart(int value)
     {
-        Node temp=new Node(value, root.getNext());
-        root.setNext(temp);
+        Node temp=new Node(value);
+        if(root==null)
+        	{
+        		root=temp;
+        		++index;
+        	}
+        else
+    	{
+        	addPos(0, value);
+    	}
     }
 
     @Override
     public void addEnd(int value)
     {
-        Node pluck=root;
-        while(pluck.getNext()!=null)
-        {
-            pluck=pluck.getNext();
-        }
-        Node temp=new Node(value);
-        pluck.setNext(temp);
+    	if(root==null)
+    		{
+    			root=new Node(value);
+    			++index;
+    		}
+    	else
+    	{
+	        addPos(index, value);
+    	}
     }
 
     @Override
     public void addPos(int position, int value)
     {        
-        if(position<0||position>size())throw new ArrayIndexOutOfBoundsException();
+        if(position<0||position>index)throw new IndexOutOfBoundsException();
         Node temp=new Node(value);
-        Node pluck=root;
-        int counter=0;
-        while(pluck.getNext()!=null&counter<position)
+        if(root==null)root=temp;
+        else if (position==0)
         {
-            pluck=pluck.getNext();
-            ++counter;
+        	temp.setNext(root);
+        	root=temp;
         }
-        temp.setNext(pluck.getNext());
-        pluck.setNext(temp);
+        else if(position==index)
+        {
+        	Node current=root;
+	        while(current.getNext()!=null)
+	        {
+	        	current=current.getNext();
+	        }
+	        current.setNext(new Node(value));
+        }
+        else
+        {
+	        Node current=root;
+	        int counter=0;
+	        while(counter<position-1)
+	        {
+	        	current=current.getNext();
+	            ++counter;
+	        }
+	        temp.setNext(current.getNext());
+	        current.setNext(temp);
+        }
+        ++index;
     }
 
     @Override
     public void delStart()
     {
-        if(size()==0)throw new ArrayIndexOutOfBoundsException();
-        if(size()==1)root=new Node();
-        else root=root.getNext();
+        if(index==0)throw new IndexOutOfBoundsException();
+        if(index==1)
+        	{
+        		root=null;
+        		--index;
+        	}
+        else delPos(0);
     }
 
     @Override
     public void delEnd()
     {
-        if(size()==0)throw new ArrayIndexOutOfBoundsException();
-        Node pluck=root;
-        Node prePluck=null;
-        while(pluck.getNext()!=null)
-        {
-            prePluck=pluck;
-            pluck=pluck.getNext();
-        }
-        prePluck.setNext(null);
+        if(index==0)throw new IndexOutOfBoundsException();
+        if(index==1)
+        	{
+        		root=null;
+        		--index;
+        	}
+        else delPos(index-1);
     }
 
     @Override
     public void delPos(int position)
     {       
-        if(size()==0||position<0||position>=size())throw new ArrayIndexOutOfBoundsException();        
-        Node pluck=root;
-        Node prePluck=null;
-        int counter=0;
-        while(pluck.getNext()!=null&counter<=position)
+        if(index==0 || position<0 || position>=index)throw new IndexOutOfBoundsException();
+        if(index==1)root=null;
+        else if(position==0)root=root.getNext();
+        else if(position==index-1)
         {
-            prePluck=pluck;
-            pluck=pluck.getNext();
-            ++counter;
+        	Node current=root;
+	        while(current.getNext().getNext()!=null)
+	        {
+	            current=current.getNext();
+	        }
+	        current.setNext(null);
         }
-        prePluck.setNext(pluck.getNext());
+        else
+        {
+	        Node current=root;
+	        int counter=0;
+	        while(counter<position-1)
+	        {
+	        	current=current.getNext();
+	            ++counter;
+	        }
+	        current.setNext(current.getNext().getNext());
+        }
+        --index;
     }
 
     @Override
     public void set(int position, int value)
     {       
-        if(position<0||position>=size())throw new ArrayIndexOutOfBoundsException();      
-        Node pluck=root;
+        if(position<0 || position>=index)throw new IndexOutOfBoundsException();      
+        Node current=root;
         int counter=0;
-        while(pluck.getNext()!=null&counter<=position)
+        while(current.getNext()!=null & counter<=position)
         {
-            pluck=pluck.getNext();
+        	current=current.getNext();
             ++counter;
         }
-        pluck.setData(value);
+        current.setData(value);
     }
 
     @Override
     public int get(int position)
     {
-        if(position<0||position>=size())throw new ArrayIndexOutOfBoundsException();
-        Node pluck=root;
+        if(position<0 || position >= index)throw new IndexOutOfBoundsException();
+        Node current=root;
         int counter=0;
-        while(pluck.getNext()!=null&counter<=position)
+        while(current != null & counter<position)
         {
-            pluck=pluck.getNext();
+        	current=current.getNext();
             ++counter;
         }
-        return pluck.getData();
+        return current.getData();
     }
 
     @Override
     public void clear()
     {
-        root=new Node();
+        root=null;
+        index=0;
     }
 
     @Override
     public int size()
     {
-        Node pluck=root;
+        Node current=root;
         int counter=0;
-        while(pluck.getNext()!=null)
+        while(current!=null)
         {
-            pluck=pluck.getNext();
+        	current=current.getNext();
             ++counter;
         }
         return counter;
@@ -148,11 +191,11 @@ public class LList1p1l implements IList
     @Override
     public void sort()
     {  
-        if(size()<2) return;
+        if(index<2) return;
         Node lastSorted=null;
-        while(root.getNext()!=lastSorted)
+        while(root!=lastSorted)
         {
-            Node tmp=root.getNext();
+            Node tmp=root;
             while(tmp.getNext()!=lastSorted)
             {
                 if(tmp.getData()>tmp.getNext().getData())
@@ -168,32 +211,17 @@ public class LList1p1l implements IList
     }
 
     @Override
-    public void revers()
-    {
-        if(size()<2) return;
-        Node first=root.getNext();
-        while(first.getNext()!=null)
-        {
-            Node tmp=first.getNext();
-            first.setNext(tmp.getNext());
-            tmp.setNext(root.getNext());
-            root.setNext(tmp);
-        }
-    }
-
-    @Override
     public IList copy()
     {
         LList1p1l temp=new LList1p1l();
-        Node tempParent=temp.root;
-        Node pluck=root;
+        if(this.root==null) return temp;
+             
+        Node current=root;
         
-        while(pluck.getNext()!=null)
+        while(current!=null)
         {
-            pluck=pluck.getNext();
-            Node n=new Node(pluck.getData());
-            tempParent.setNext(n);
-            tempParent=tempParent.getNext();
+        	temp.addEnd(current.getData());
+        	current=current.getNext();
         }        
         return temp;
     }
@@ -202,15 +230,16 @@ public class LList1p1l implements IList
     public String toString()
     {
         String result="";
-        Node pluck=root;
+        Node current=root;
         
-        while(pluck.getNext()!=null)
+        while(current!=null)
         {
-            boolean b=(pluck==root)?true:false;
+            boolean b=(current==root)?true:false;
             
-            pluck=pluck.getNext();
-            if(b) result=""+pluck.getData();
-            else result=result + " "+pluck.getData();
+            if(b) result=""+current.getData();
+            else result=result + " "+current.getData();
+            
+            current=current.getNext();
         }      
         
         return result;
@@ -218,14 +247,14 @@ public class LList1p1l implements IList
     @Override
     public int[] toArray()
     {
-        int[]arr=new int[size()];
+        int[]arr=new int[index];
         int i=0;
-        Node pluck=root;
+        Node current=root;
         
-        while(pluck.getNext()!=null)
+        while(current!=null)
         {
-            pluck=pluck.getNext();
-            arr[i++]=pluck.getData();
+            arr[i++]=current.getData();
+        	current=current.getNext();
         }      
         return arr;
     }
@@ -239,14 +268,14 @@ public class LList1p1l implements IList
     @Override
     public boolean hasNext()
     {
-        if(count<this.size())return true;
+        if(count<this.index)return true;
         return false;
     }
 
     @Override
     public Object next()
     {
-        if(count == this.size())
+        if(count == this.index)
         throw new NoSuchElementException();
 
         count++;
